@@ -886,6 +886,12 @@ section {
    color: var(--light-color);
 }
 
+#payment-button{ 
+   color: purple;
+   align-items: center;
+ 
+}
+
 /* order ............................................................ */
 
 

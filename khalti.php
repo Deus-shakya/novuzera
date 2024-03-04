@@ -10,9 +10,9 @@ if (isset($_GET['id'])) {
 <html>
 <head>
     <script src="https://khalti.s3.ap-south-1.amazonaws.com/KPG/dist/2020.12.17.0.0.0/khalti-checkout.iffe.js"></script>
+    
 </head>
 <body>
-    ...
     <!-- Place this where you need payment button -->
     <button id="payment-button">Pay with Khalti</button>
     <!-- Place this where you need payment button -->
@@ -22,8 +22,8 @@ if (isset($_GET['id'])) {
             // replace the publicKey with yours
             "publicKey": "test_public_key_5bad4cf7a61e497cac44f749f1aef178",
             "productIdentity":<?php echo $id?>,
-            "productName": "Dragon",
-            "productUrl": "http://gameofthrones.wikia.com/wiki/Dragons",
+            "productName": "Tees",
+            "productUrl": "http://khalti.com",
             "paymentPreference": [
                 "KHALTI",
                 "EBANKING",
@@ -77,10 +77,9 @@ if (isset($_GET['id'])) {
         var btn = document.getElementById("payment-button");
         btn.onclick = function () {
             // minimum transaction amount must be 10, i.e 1000 in paisa.
-            checkout.show({amount: 1000});
+            checkout.show({amount: 100});
         }
     </script>
     <!-- Paste this code anywhere in you body tag -->
-    ...
 </body>
 </html>
