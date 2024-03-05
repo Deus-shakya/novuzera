@@ -884,13 +884,10 @@ section {
 .checkout-orders form .flex .inputBox span {
    font-size: 1.8rem;
    color: var(--light-color);
-}
-
-#payment-button{ 
-   color: purple;
-   align-items: center;
  
 }
+
+
 
 /* order ............................................................ */
 

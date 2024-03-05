@@ -38,7 +38,8 @@ if (isset($_POST['order'])) {
       $delete_cart->execute([$user_id]);
 
       $message[] = 'order placed successfully!';
-      header("Location:khalti.php?id=".$insertedId);
+      header("Location:khalti.php?id=".$insertedId."&total_price=". $total_price);
+
       exit();
    } else {
       $message[] = 'your cart is empty';

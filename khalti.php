@@ -1,7 +1,9 @@
 <?php
-$id='';
-if (isset($_GET['id'])) {
+$id = '';
+$total_price = '';
+if (isset($_GET['id']) && isset($_GET['total_price'])) {
     $id = $_GET['id'];
+    $total_price = $_GET['total_price'];
 } else {
     echo'error'; 
 }
@@ -77,7 +79,7 @@ if (isset($_GET['id'])) {
         var btn = document.getElementById("payment-button");
         btn.onclick = function () {
             // minimum transaction amount must be 10, i.e 1000 in paisa.
-            checkout.show({amount: 100});
+            checkout.show({ amount: <?php echo $total_price * 100; ?> });
         }
     </script>
     <!-- Paste this code anywhere in you body tag -->
