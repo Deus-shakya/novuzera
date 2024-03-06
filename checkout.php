@@ -127,7 +127,7 @@ if (isset($_POST['order'])) {
             </div>
          </div>
 
-         <input type="submit" name="order" class="btn <?= ($grand_total > 1)?'':'disabled'; ?>" value="Pay">
+         <input type="submit" name="order" class="btn <?= ($grand_total > 1)?'':'disabled'; ?>" value="Pay" >
 
       </form>
       

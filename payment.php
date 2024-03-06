@@ -1,50 +1,39 @@
 <?php
-
-class DBConnection {
-    public $conn;
-
-    public function __construct() {
-        // Your database connection logic here
-        $db_name = 'mysql:host=localhost;dbname=novuzera';
-        $user_name = 'root';
-        $user_password = '';
-
-        try {
-            $this->conn = new PDO($db_name, $user_name, $user_password);
-            // Set the PDO error mode to exception
-            $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        } catch (PDOException $e) {
-            echo 'Connection failed: ' . $e->getMessage();
-        }
-    }
-}
-
-// Usage of the DBConnection class
-$dbConnection = new DBConnection();
-
-$token = '';
-$orderid = '';
+// Include database connection
+include 'components/connect.php';
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
+    // Retrieve token and order ID from the POST request
     $token = isset($_POST["token"]) ? $_POST["token"] : '';
-    $orderid = isset($_POST["bookid"]) ? $_POST["bookid"] : '';
+    $order_id = isset($_POST["order_id"]) ? $_POST["order_id"] : '';
 
-    // Use prepared statement to prevent SQL injection
-    $updateQuery = "UPDATE orders SET token = :token WHERE id = :orderid";
-    $stmt = $dbConnection->conn->prepare($updateQuery);
+    // Check if token and order ID are not empty
+    if (!empty($token) && !empty($order_id)) {
+        try {
+            // Use prepared statement to prevent SQL injection
+            $updateQuery = "UPDATE orders SET token = :token WHERE id = :order_id";
+            $stmt = $conn->prepare($updateQuery);
 
-    // Bind parameters
-    $stmt->bindParam(':token', $token);
-    $stmt->bindParam(':orderid', $orderid);
+            // Bind parameters
+            $stmt->bindParam(':token', $token);
+            $stmt->bindParam(':order_id', $order_id);
 
-    // Execute the statement
-    $stmt->execute();
+            // Execute the statement
+            $stmt->execute();
 
-    if ($stmt->rowCount() > 0) {
-        header("location: home.php");
-        exit;
+            // Check if the update was successful
+            if ($stmt->rowCount() > 0) {
+                // Redirect to home page
+                header("Location: home.php");
+                exit;
+            } else {
+                echo "Error updating record";
+            }
+        } catch (PDOException $e) {
+            echo "Error: " . $e->getMessage();
+        }
     } else {
-        echo "Error updating record";
+        echo "Token or order ID is empty";
     }
 }
 ?>
