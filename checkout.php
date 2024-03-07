@@ -117,7 +117,7 @@ if (isset($_POST['order'])) {
             </div>
 
             <div class="inputBox">
-               <span>Address line 01 :</span>
+               <span>Address line:</span>
                <input type="text" name="flat" placeholder="e.g. house/flat number" class="box" maxlength="50" required>
             </div>
 

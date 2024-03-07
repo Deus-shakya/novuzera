@@ -4,9 +4,12 @@ include 'components/connect.php';
 
 session_start();
 
+// $message as an empty array to avoid potential errors
+$message = [];
+
 if(isset($_SESSION['user_id'])){
    $user_id = $_SESSION['user_id'];
-}else{
+} else {
    $user_id = '';
 };
 
@@ -21,22 +24,27 @@ if(isset($_POST['submit'])){
    $cpass = sha1($_POST['cpass']);
    $cpass = filter_var($cpass, FILTER_SANITIZE_STRING);
 
-   $select_user = $conn->prepare("SELECT * FROM `users` WHERE email = ?");
-   $select_user->execute([$email,]);
-   $row = $select_user->fetch(PDO::FETCH_ASSOC);
+   // validation to check if the username contains restricted characters or numbers
+   if (preg_match('/[#*!0-9]/', $name)) {
+      $message[] = 'Username cannot contain #, *, !, or numbers';
+   } else {
 
-   if($select_user->rowCount() > 0){
-      $message[] = 'email already exists!';
-   }else{
-      if($pass != $cpass){
-         $message[] = 'confirm password not matched!';
-      }else{
-         $insert_user = $conn->prepare("INSERT INTO `users`(name, email, password) VALUES(?,?,?)");
-         $insert_user->execute([$name, $email, $cpass]);
-         $message[] = 'registered successfully, login now please!';
+      $select_user = $conn->prepare("SELECT * FROM `users` WHERE email = ?");
+      $select_user->execute([$email,]);
+      $row = $select_user->fetch(PDO::FETCH_ASSOC);
+
+      if($select_user->rowCount() > 0){
+         $message[] = 'Email already exists!';
+      } else {
+         if($pass != $cpass){
+            $message[] = 'Confirm password does not match!';
+         } else {
+            $insert_user = $conn->prepare("INSERT INTO `users`(name, email, password) VALUES(?,?,?)");
+            $insert_user->execute([$name, $email, $cpass]);
+            $message[] = 'Registered successfully, please login now!';
+         }
       }
    }
-
 }
 
 ?>
@@ -65,28 +73,23 @@ if(isset($_POST['submit'])){
 
    <form action="" method="post">
       <h3>register</h3>
-      <input type="text" name="name" required placeholder="enter your username" maxlength="20" pattern="[A-Za-z]+" class="box">
-      <input type="email" name="email" required placeholder="enter your email" maxlength="50"  class="box" oninput="this.value = this.value.replace(/\s/g, '')">
-      <input type="password" name="pass" required placeholder="enter your password" maxlength="20"  class="box" oninput="this.value = this.value.replace(/\s/g, '')">
-      <input type="password" name="cpass" required placeholder="confirm your password" maxlength="20"  class="box" oninput="this.value = this.value.replace(/\s/g, '')">
-      <input type="submit" value="register now" class="btn" name="submit">
+      <?php
+         if(is_array($message) && !empty($message)){
+            foreach($message as $msg){
+               echo "<p class='error'>$msg</p>";
+            }
+         }
+      ?>
+      <input type="text" name="name" required placeholder="Enter your username" maxlength="20" pattern="[A-Za-z]+" class="box">
+      <input type="email" name="email" required placeholder="Enter your email" maxlength="50" class="box" oninput="this.value = this.value.replace(/\s/g, '')">
+      <input type="password" name="pass" required placeholder="Enter your password" maxlength="20" class="box" oninput="this.value = this.value.replace(/\s/g, '')">
+      <input type="password" name="cpass" required placeholder="Confirm your password" maxlength="20" class="box" oninput="this.value = this.value.replace(/\s/g, '')">
+      <input type="submit" value="Register Now" class="btn" name="submit">
       <p>Already have an account?</p>
       <a href="user_login.php" class="option-btn">Login now</a>
    </form>
 
 </section>
-
-
-
-
-
-
-
-
-
-
-
-
 
 <?php include 'components/footer.php'; ?>
 

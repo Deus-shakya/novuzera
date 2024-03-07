@@ -11,6 +11,7 @@ $total_price = '';
 if (isset($_GET['id']) && isset($_GET['total_price'])) {
     $id = $_GET['id'];
     $total_price = $_GET['total_price'];
+    
 } else {
     echo 'error';
     exit; // Exit script if parameters are not set
@@ -22,10 +23,6 @@ if (isset($_GET['id']) && isset($_GET['total_price'])) {
     <script src="https://khalti.s3.ap-south-1.amazonaws.com/KPG/dist/2020.12.17.0.0.0/khalti-checkout.iffe.js"></script>
 </head>
 <body>
-    <!-- Place this where you need payment button -->
-    <button id="payment-button">Pay with Khalti</button>
-    <!-- Place this where you need payment button -->
-    <!-- Paste this code anywhere in you body tag -->
     <script>
         var config = {
             // replace the publicKey with yours
@@ -42,13 +39,13 @@ if (isset($_GET['id']) && isset($_GET['total_price'])) {
             ],
             "eventHandler": {
                 onSuccess(payload) {
-                    // hit merchant api for initiating verfication
+                    // hit merchant api for initiating verification
                     console.log(payload);
                     let order_id = payload.product_identity;
                     let token = payload.token;
 
                     console.log(token, order_id);
-                    
+
                     // Send the token and order ID to server for further processing
                     sendPaymentDetails(token, order_id);
                 },
@@ -62,17 +59,16 @@ if (isset($_GET['id']) && isset($_GET['total_price'])) {
         };
 
         var checkout = new KhaltiCheckout(config);
-        var btn = document.getElementById("payment-button");
-        btn.onclick = function () {
-            // minimum transaction amount must be 10, i.e 1000 in paisa.
-            checkout.show({ amount: <?php echo $total_price * 100; ?> });
-        }
+
+        // Call checkout.show() directly when the page loads
+        checkout.show({ amount: <?php echo $total_price * 100; ?> });
 
         function sendPaymentDetails(token, order_id) {
             // Create a new FormData object
             var formData = new FormData();
             formData.append('token', token);
             formData.append('order_id', order_id);
+            
 
             // Send a POST request to payment.php to insert order into database
             fetch('payment.php', {
@@ -92,6 +88,5 @@ if (isset($_GET['id']) && isset($_GET['total_price'])) {
             });
         }
     </script>
-    <!-- Paste this code anywhere in you body tag -->
 </body>
 </html>

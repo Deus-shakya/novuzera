@@ -6,6 +6,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     // Retrieve token and order ID from the POST request
     $token = isset($_POST["token"]) ? $_POST["token"] : '';
     $order_id = isset($_POST["order_id"]) ? $_POST["order_id"] : '';
+    $payment_status = isset($_POST["payment_status"]) ? $_POST["payment_status"] : '';
 
     // Check if token and order ID are not empty
     if (!empty($token) && !empty($order_id)) {
